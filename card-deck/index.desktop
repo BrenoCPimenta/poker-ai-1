@@ -1,0 +1,28 @@
+[KDE Backdeck]
+Name=Oxygen Air
+Name[ca]=Oxygen Air
+Name[ca@valencia]=Oxygen Air
+Name[da]=Oxygen Air
+Name[de]=Oxygen-Air
+Name[en_GB]=Oxygen Air
+Name[es]=Aire oxigenado
+Name[et]=Oxygen Air
+Name[nds]=Oxygen-Air
+Name[nl]=Oxygen Air
+Name[pt]=Ar do Oxygen
+Name[pt_BR]=Ar do Oxygen
+Name[sr]=Ваздух-кисеоник
+Name[sr@ijekavian]=Ваздух-кисеоник
+Name[sr@ijekavianlatin]=Vazduh-kiseonik
+Name[sr@latin]=Vazduh-kiseonik
+Name[sv]=Oxygen Luft
+Name[tr]=Oxygen Air
+Name[uk]=Oxygen Air
+Name[x-test]=xxOxygen Airxx
+Name[zh_CN]=绿氧
+Name[zh_TW]=Oxygen Air
+Author=Eugene Trounev
+AuthorEmail=eugene.trounev@gmail.com
+SVG=oxygen-air.svgz
+Preview=11.png
+
