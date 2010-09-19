@@ -1,4 +1,5 @@
 #include "player.h"
+#include "table.h"
 
 Player::Player() :
     m_hasFolded(false),

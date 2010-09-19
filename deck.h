@@ -26,6 +26,8 @@ private:
    static bool hasFlush(Deck deck);
    static bool hasStraight(Deck deck);
    static bool hasThreeOfAKind(Deck deck);
+   static bool hasTwoPair(Deck deck);
+   static bool hasPair(Deck deck);
 
    static inline bool suitCompare(const Card &a, const Card &b);
    static inline bool valueCompare(const Card &a, const Card &b);

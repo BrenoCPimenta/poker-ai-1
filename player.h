@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "table.h"
+class Table;
 #include "deck.h"
 
 class Player
@@ -20,7 +20,7 @@ public:
 
     void setDeck(Deck deck) { m_cards = deck; m_hasFolded = false; }
 
-    bool hasFolded() { return m_hasFolded; }
+    bool hasFolded() const { return m_hasFolded; }
 
     int money() { return m_money; }
     void takeMoney(int amount) { m_money -= amount; }

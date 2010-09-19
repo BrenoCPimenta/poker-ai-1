@@ -1,4 +1,6 @@
 #include "deck.h"
+
+#include "card.h"
 #include <QDebug>
 
 Deck::Deck() : QList<Card>()
@@ -37,10 +39,16 @@ int Deck::strength()
         return 7;
     else if (!hasFlush(deck))
         return 6;
-    else if (hasStraight(deck))
+    else if (!hasStraight(deck))
         return 5;
-
-    return 0;
+    else if (hasThreeOfAKind(deck))
+        return 4;
+    else if (hasTwoPair(deck))
+        return 3;
+    else if (hasPair(deck))
+        return 2;
+    else
+        return 1;
 }
 
 bool Deck::hasStraightFlush(Deck deck)
@@ -155,7 +163,55 @@ bool Deck::hasStraight(Deck deck)
 
 bool Deck::hasThreeOfAKind(Deck deck)
 {
+    qSort(deck.begin(), deck.end(), valueCompare);
+    Card::Value value = deck.first().value();
+    int count = 1;
 
+    foreach(const Card &card, deck) {
+        if (card.value() == value) {
+            count++;
+            if (count >= 3) return true;
+        } else {
+            count = 1;
+            value = card.value();
+        }
+    }
+    return false;
+}
+
+bool Deck::hasTwoPair(Deck deck)
+{
+    qSort(deck.begin(), deck.end(), valueCompare);
+
+    Card::Value lastValue = (Card::Value)-1;
+    bool hasOnePair = false;
+
+    foreach(const Card &card, deck) {
+        if (card.value() == lastValue) {
+            if (hasOnePair)
+                return true;
+            else
+                hasOnePair = true;
+        }
+        lastValue = card.value();
+    }
+
+    return false;
+}
+
+bool Deck::hasPair(Deck deck)
+{
+    qSort(deck.begin(), deck.end(), valueCompare);
+
+    Card::Value lastValue = (Card::Value)-1;
+
+    foreach(const Card &card, deck) {
+        if (card.value() == lastValue)
+            return true;
+        lastValue = card.value();
+    }
+
+    return false;
 }
 
 void Deck::printOut()

@@ -2,10 +2,13 @@
 #define TABLE_H
 
 #include <QObject>
-
-#include "player.h"
-#include "deck.h"
 #include "card.h"
+#include "deck.h"
+#include "player.h"
+
+class Player;
+class Deck;
+class Card;
 
 class Table : public QObject
 {
