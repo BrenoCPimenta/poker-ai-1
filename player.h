@@ -18,7 +18,7 @@ public:
     Action assess(Table *table);
     int handStrength(Table *table);
 
-    void setDeck(Deck deck) { m_cards = deck; m_hasFolded = false; }
+    void setDeck(Deck deck);
 
     bool hasFolded() const { return m_hasFolded; }
 

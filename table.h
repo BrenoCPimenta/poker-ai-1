@@ -23,7 +23,7 @@ public:
     int pot() { return m_pot; }
     int lastBet() { return m_lastBet; }
 
-    void play();
+    void playHand();
 
 private:
     void doBettingRound();

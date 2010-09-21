@@ -23,7 +23,6 @@ void Deck::shuffle(int iterations)
             Card c = takeAt(qrand() % j);
             append(c);
         }
-        qWarning() << i;
     }
 }
 
@@ -31,15 +30,15 @@ int Deck::strength()
 {
     Deck deck(*this);
 
-    if (!hasStraightFlush(deck))
+    if (hasStraightFlush(deck))
         return 9;
-    else if (!hasFourOfAKind(deck))
+    else if (hasFourOfAKind(deck))
         return 8;
-    else if (!hasFullHouse(deck))
+    else if (hasFullHouse(deck))
         return 7;
-    else if (!hasFlush(deck))
+    else if (hasFlush(deck))
         return 6;
-    else if (!hasStraight(deck))
+    else if (hasStraight(deck))
         return 5;
     else if (hasThreeOfAKind(deck))
         return 4;
@@ -78,7 +77,6 @@ bool Deck::hasFourOfAKind(Deck deck)
 {
     // Sorts only by card value
     qSort(deck.begin(), deck.end(), valueCompare);
-    deck.printOut();
     Card::Value lastValue = (Card::Value)-1;
     int count = 0;
 
@@ -255,4 +253,106 @@ Deck Deck::take(int num)
         deck.append(takeLast());
 
     return deck;
+}
+
+// Checks if this deck looses against another one
+bool Deck::operator <(Deck other)
+{
+    Deck deck(*this); // Copy that floppy
+
+    if (hasStraightFlush(deck) || hasFlush(deck)) {
+        qSort(deck.begin(), deck.end(), suitValueCompare);
+        qSort(other.begin(), other.end(), suitValueCompare);
+        return compareDecks(deck, other);
+    } else if (hasFourOfAKind(deck) || hasFullHouse(deck) || hasStraight(deck)) {
+        qSort(deck.begin(), deck.end(), valueCompare);
+        qSort(other.begin(), other.end(), valueCompare);
+        return compareDecks(deck, other);
+    } else if (hasThreeOfAKind(deck)) {
+        Deck one, two;
+        one << getMostValue(deck)
+            << getSecondMostValue(deck);
+        two << getMostValue(other)
+            << getSecondMostValue(other);
+        return compareDecks(one, two);
+    } else if (hasTwoPair(deck) || hasPair(deck)) {
+        deck = getPairs(deck);
+        other = getPairs(deck);
+        qSort(deck.begin(), deck.end(), valueCompare);
+        qSort(other.begin(), other.end(), valueCompare);
+        return compareDecks(deck, other);
+    } else {
+        qSort(deck.begin(), deck.end(), valueCompare);
+        qSort(other.begin(), other.end(), valueCompare);
+        return compareDecks(deck, other);
+    }
+}
+
+bool Deck::compareDecks(const Deck &one, const Deck &two)
+{
+    for (int i=0; i<one.size(); i++) {
+        if (one[i].value() != two[i].value())
+            return one[i].value() < two[i].value();
+    }
+
+    return false;
+}
+
+Card::Value Deck::getMostValue(const Deck &deck)
+{
+    QMap<Card::Value, int> valueCounts;
+    for (int i=0; i<(int)Card::Ace; i++)
+        valueCounts[(Card::Value)i] = 0;
+    foreach(const Card card, deck) {
+        valueCounts[card.value()]++;
+    }
+
+    int max = -1;
+    Card::Value value;
+    for (int i=0; i<Card::Ace; i++) {
+        if (valueCounts[(Card::Value)i] > max) {
+            max = valueCounts[(Card::Value)i];
+            value = (Card::Value)i;
+        }
+    }
+
+    return value;
+}
+
+Card::Value Deck::getSecondMostValue(const Deck &deck)
+{
+    QMap<Card::Value, int> valueCounts;
+    for (int i=0; i<(int)Card::Ace; i++)
+        valueCounts[(Card::Value)i] = 0;
+    foreach(const Card card, deck) {
+        valueCounts[card.value()]++;
+    }
+
+    int max = -1;
+    Card::Value mostValue;
+    Card::Value secondMost;
+    for (int i=0; i<Card::Ace; i++) {
+        if (valueCounts[(Card::Value)i] > max) {
+            max = valueCounts[(Card::Value)i];
+            secondMost = mostValue;
+            mostValue = (Card::Value)i;
+        }
+    }
+
+    return secondMost;
+}
+
+Deck Deck::getPairs(const Deck &deck)
+{
+    Deck d;
+    Card old;
+    foreach(const Card &card, deck) {
+        if (card.value() == old.value()) {
+            d << card
+              << old;
+        }
+
+        old = card;
+    }
+    return d;
 }

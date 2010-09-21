@@ -19,6 +19,8 @@ public:
 
     void printOut();
 
+    bool operator <(Deck other);
+
 private:
    static bool hasStraightFlush(Deck deck);
    static bool hasFourOfAKind(Deck deck);
@@ -29,9 +31,16 @@ private:
    static bool hasTwoPair(Deck deck);
    static bool hasPair(Deck deck);
 
+   static Card::Value getMostValue(const Deck &deck);
+   static Card::Value getSecondMostValue(const Deck &deck);
+
+   static Deck getPairs(const Deck &deck);
+
    static inline bool suitCompare(const Card &a, const Card &b);
    static inline bool valueCompare(const Card &a, const Card &b);
    static inline bool suitValueCompare(const Card &a, const Card &b);
+
+   static inline bool compareDecks(const Deck &one, const Deck &two);
 };
 
 #endif // DECK_H

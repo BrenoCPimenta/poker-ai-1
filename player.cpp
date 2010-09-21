@@ -1,6 +1,8 @@
 #include "player.h"
 #include "table.h"
 
+#include <QDebug>
+
 Player::Player() :
     m_hasFolded(false),
     m_money(1000),
@@ -10,6 +12,12 @@ Player::Player() :
 
 Player::Action Player::assess(Table *table)
 {
+    if (table->lastBet() < 50) {
+        qDebug() << "PLAYAH SAYS: TOO LITTLE MONIES, TIME TO BET SOME, DAWGS!";
+        m_bet = 50;
+        return Raise;
+    }
+
     if (table->flop().isEmpty()) {
         return Call;
     }
@@ -37,3 +45,11 @@ int Player::handStrength(Table *table)
     m_lastHandStrength = cards.strength();
     return m_lastHandStrength;
 }
+
+void Player::setDeck(Deck deck)
+{
+    m_cards = deck;
+    m_hasFolded = false;
+    m_cards.printOut();
+}
+
