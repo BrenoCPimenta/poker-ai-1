@@ -24,11 +24,13 @@ public:
     int lastBet() { return m_lastBet; }
     int numPlayers() { return m_players.size(); }
 
-    void playHand();
+    int activePlayers();
+
+    void play(int rounds);
 
 private:
+    void playHand();
     void doBettingRound();
-    int activePlayers();
 
     QList<Player> m_players;
 

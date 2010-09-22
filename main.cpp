@@ -35,12 +35,11 @@ int main(int argc, char *argv[])
         } else if (a.arguments()[1] == "-t") {
             testDeck();
         }
-
     }
 
-//    Table table;
+    Table table;
 
-//    table.playHand();
+    table.play(1000);
 //    return a.exec();
 }
 

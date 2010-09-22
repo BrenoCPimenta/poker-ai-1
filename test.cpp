@@ -112,6 +112,14 @@ void testDeck()
             << Card(Card::Six, Card::Heart);
     Q_ASSERT(Deck::hasThreeOfAKind(threeOfAKind));
 
+    Deck threeOfAKind2;
+    threeOfAKind2 << Card(Card::Ten, Card::Heart)
+                  << Card(Card::Ten, Card::Club)
+                  << Card(Card::Four, Card::Diamond)
+                  << Card(Card::Four, Card::Heart)
+                  << Card(Card::Nine, Card::Heart);
+    Q_ASSERT(threeOfAKind2 < threeOfAKind);
+
     //Test two pair
     deck.clear();
     deck << Card(Card::Jack, Card::Heart)
@@ -128,6 +136,15 @@ void testDeck()
             << Card(Card::Four, Card::Spade)
             << Card(Card::Nine, Card::Heart);
     Q_ASSERT(!Deck::hasThreeOfAKind(twoPair));
+
+    Deck twoPair2;
+    twoPair2 << Card(Card::Ten, Card::Heart)
+            << Card(Card::Ten, Card::Club)
+            << Card(Card::Four, Card::Diamond)
+            << Card(Card::Four, Card::Heart)
+            << Card(Card::Nine, Card::Heart);
+    Q_ASSERT(twoPair2 < twoPair);
+
 
     //Test one pair
     deck.clear();
@@ -146,13 +163,12 @@ void testDeck()
             << Card(Card::Five, Card::Spade);
     Q_ASSERT(!Deck::hasTwoPair(onePair));
 
-
     Deck onePair2;
     onePair2 << Card(Card::Three, Card::Heart)
-            << Card(Card::Three, Card::Spade)
-            << Card(Card::King, Card::Spade)
-            << Card(Card::Ten, Card::Diamond)
-            << Card(Card::Five, Card::Spade);
-    //Q_ASSERT(onePair2 < onePair);
+             << Card(Card::Three, Card::Spade)
+             << Card(Card::King, Card::Spade)
+             << Card(Card::Ten, Card::Spade)
+             << Card(Card::Six, Card::Spade);
+    Q_ASSERT(onePair2 < onePair);
 }
 

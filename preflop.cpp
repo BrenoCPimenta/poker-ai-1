@@ -10,6 +10,7 @@
 
 PreFlop::PreFlop()
 {
+    // I demand cake.
 }
 
 /**
@@ -17,7 +18,6 @@ PreFlop::PreFlop()
   */
 int PreFlop::calculateWinningProbability(const Deck &hand, int otherPlayers, int rollouts)
 {
-
     otherPlayers--; // subtract ourselves
 
     int wins = 0, ties = 0;
@@ -31,15 +31,7 @@ int PreFlop::calculateWinningProbability(const Deck &hand, int otherPlayers, int
         Deck deck;
         deck.generate();
 
-        // Take out the cards on the hand
-        foreach(const Card &card, hand) {
-            for (int j=0; j<deck.size(); j++) {
-                if (deck[j].value() == card.value() && deck[j].suit() == card.suit()) {
-                    deck.takeAt(j);
-                    break;
-                }
-            }
-        }
+        deck.removeCards(hand);
 
         deck.shuffle();
 
@@ -69,7 +61,8 @@ int PreFlop::calculateWinningProbability(const Deck &hand, int otherPlayers, int
 
     }
     wins += ties/2; // Sane? Why I would never.
-    wins /= (1000/rollouts);
+    float fraction = (float)rollouts/1000.0f;
+    wins /= fraction;
     return wins;
 }
 
@@ -78,7 +71,7 @@ void PreFlop::generateData(int rollouts)
     Card card1, card2;
     Deck deck;
     for (int players = 2; players<=10; players++) {
-        qDebug() << "Generating for"<<players<<"players";
+        qDebug() << "Generating preflop rollout for"<<players<<"players";
         //Generate mixed suit data
         for (int value1=0; value1<=13; value1++) {
             for (int value2=value1; value2<=13; value2++) {
@@ -155,7 +148,6 @@ void PreFlop::loadData(const QString &filename)
     int players, possibility;
     while (!file.atEnd()) {
         line = file.readLine().split(',');
-        qDebug() << line;
         if (line[0] == "Mixed") {
             players = atoi(line[1]);
             val1 = (Card::Value)atoi(line[2]);

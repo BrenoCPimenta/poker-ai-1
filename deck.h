@@ -17,7 +17,7 @@ public:
 
     void sort();
 
-    void printOut();
+    void printOut() const;
 
     bool operator <(Deck other);
 
@@ -29,6 +29,8 @@ public:
     static bool hasThreeOfAKind(Deck deck);
     static bool hasTwoPair(Deck deck);
     static bool hasPair(Deck deck);
+
+    void removeCards(const Deck &cards);
 
 
 private:

@@ -213,7 +213,7 @@ bool Deck::hasPair(Deck deck)
     return false;
 }
 
-void Deck::printOut()
+void Deck::printOut() const
 {
     foreach(const Card &card, *this) {
         qDebug() << card.toString();
@@ -281,10 +281,13 @@ bool Deck::operator <(Deck other)
             << getSecondMostValue(other);
         return compareDecks(one, two);
     } else if (hasTwoPair(deck) || hasPair(deck)) {
-        deck = getPairs(deck);
-        other = getPairs(deck);
         qSort(deck.begin(), deck.end(), valueCompare);
         qSort(other.begin(), other.end(), valueCompare);
+
+        deck = getPairs(deck);
+        other = getPairs(other);
+        qDebug() << deck.size() << ":" << other.size();
+
         return compareDecks(deck, other);
     } else {
         qSort(deck.begin(), deck.end(), valueCompare);
@@ -295,7 +298,7 @@ bool Deck::operator <(Deck other)
 
 bool Deck::compareDecks(const Deck &one, const Deck &two)
 {
-    for (int i=0; i<one.size(); i++) {
+    for (int i=0; i<one.size() && i<two.size(); i++) {
         if (one[i].value() != two[i].value())
             return one[i].value() < two[i].value();
     }
@@ -360,4 +363,16 @@ Deck Deck::getPairs(const Deck &deck)
         old = card;
     }
     return d;
+}
+
+void Deck::removeCards(const Deck &hand){
+    // Take out the cards on the hand
+    foreach(const Card &card, hand) {
+        for (int j=0; j<size(); j++) {
+            if (at(j).value() == card.value() && at(j).suit() == card.suit()) {
+                takeAt(j);
+                break;
+            }
+        }
+    }
 }
