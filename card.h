@@ -43,6 +43,8 @@ public:
 
     QString toString() const;
 
+    static Card fromString(const QString &string);
+
 private:
     Value m_value;
     Suit m_suit;

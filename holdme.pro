@@ -17,7 +17,7 @@ SOURCES += main.cpp \
     test.cpp \
     preflopplayer.cpp \
     statisticalmodel.cpp \
-    context.cpp
+    statisticalplayer.cpp
 HEADERS += player.h \
     table.h \
     card.h \
@@ -25,4 +25,4 @@ HEADERS += player.h \
     preflop.h \
     preflopplayer.h \
     statisticalmodel.h \
-    context.h
+    statisticalplayer.h

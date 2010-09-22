@@ -4,6 +4,10 @@
 #include "card.h"
 #include "deck.h"
 #include "player.h"
+#include "statisticalmodel.h"
+
+#include <QMap>
+
 
 class Player;
 class Deck;
@@ -45,6 +49,9 @@ private:
     int m_pot;
     int m_lastBet;
     Phase m_phase;
+
+    // Username <> Statistical model
+    QMap<QString, StatisticalModel> m_models;
 };
 
 #endif // TABLE_H

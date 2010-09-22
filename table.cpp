@@ -12,6 +12,8 @@ Table::Table(Phase phase) :
         m_phase(phase)
 {
     switch (phase) {
+    case (III):
+        qFatal("NOT IMPLEMENTED");
     case (II):
         m_players << RolloutPlayer(false)
                   << RolloutPlayer(false)
@@ -211,13 +213,16 @@ void Table::doBettingRound()
                 called++;
                 break;
             case (Player::Raise):
-
                 qDebug() << "Player" << m_players[current].name() << "raised to" << m_players[current].bet() << ".";
                 m_pot += m_players[current].bet();
                 m_lastBet = m_players[current].bet();
                 called = 0; // Everyone now needs to call or fold to this raise
                 m_players[current].takeMoney(m_players[current].bet());
             }
+
+            Deck community = m_flop;
+            community << m_turn << m_river;
+            m_models[m_players[current].name()].addContext(lastBet() / (float)(lastBet() + pot()), action, community, m_players[current].handStrength(this));
         }
         //qDebug() << "Active players:" << activePlayers();
         if (activePlayers() < 2)

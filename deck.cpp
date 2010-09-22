@@ -2,6 +2,7 @@
 
 #include "card.h"
 #include <QDebug>
+#include <QStringList>
 
 Deck::Deck() : QList<Card>()
 {
@@ -374,4 +375,28 @@ void Deck::removeCards(const Deck &hand){
             }
         }
     }
+}
+
+QString Deck::toString() const
+{
+    QString ret;
+
+    for (int i=0; i<size(); i++) {
+        if (i)
+            ret += ',';
+        ret += at(i).toString();
+    }
+
+    return ret;
+}
+
+Deck Deck::fromString(QString string)
+{
+    Deck ret;
+    QStringList cards = string.split(',');
+    foreach(const QString &card, cards) {
+        ret.append(Card::fromString(card));
+    }
+
+    return ret;
 }

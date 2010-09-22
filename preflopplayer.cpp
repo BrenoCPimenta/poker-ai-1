@@ -60,10 +60,9 @@ Player::Action RolloutPlayer::assess(Table *table)
             }
         }
     }
-
+    return Call; //
 }
 
-// THEY SEE ME ROLLIN', THEY HATIN'
 int RolloutPlayer::h(Deck hand, const Deck &onTable, int players)
 {
     hand.append(onTable);

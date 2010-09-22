@@ -32,6 +32,9 @@ public:
 
     void removeCards(const Deck &cards);
 
+    QString toString() const;
+    static Deck fromString(QString string);
+
 
 private:
 

@@ -83,3 +83,71 @@ QString Card::toString() const
 
     return r;
 }
+
+Card Card::fromString(const QString &string)
+{
+    Suit suit;
+    Value value;
+    switch(string[0].toAscii()) {
+    case 'S':
+        suit = Card::Spade;
+        break;
+    case 'H':
+        suit = Card::Heart;
+        break;
+    case 'C':
+        suit = Card::Club;
+        break;
+    case 'D':
+        suit = Card::Diamond;
+        break;
+    default:
+        suit = (Card::Suit)-1;
+    }
+
+    switch(string[1].toAscii()) {
+    case '2':
+        value = Card::Two;
+        break;
+    case '3':
+        value = Card::Three;
+        break;
+    case '4':
+        value = Card::Four;
+        break;
+    case '5':
+        value = Card::Five;
+        break;
+    case '6':
+        value = Card::Six;
+        break;
+    case '7':
+        value = Card::Seven;
+        break;
+    case '8':
+        value = Card::Eight;
+        break;
+    case '9':
+        value = Card::Nine;
+        break;
+    case '0':
+        value = Card::Ten;
+        break;
+    case 'J':
+        value = Card::Jack;
+        break;
+    case 'Q':
+        value = Card::Queen;
+        break;
+    case 'K':
+        value = Card::King;
+        break;
+    case 'A':
+        value = Card::Ace;
+        break;
+    default:
+        value = (Card::Value)-1;
+    }
+
+    return Card(value, suit);
+}
