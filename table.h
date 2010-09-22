@@ -22,6 +22,7 @@ public:
 
     int pot() { return m_pot; }
     int lastBet() { return m_lastBet; }
+    int numPlayers() { return m_players.size(); }
 
     void playHand();
 

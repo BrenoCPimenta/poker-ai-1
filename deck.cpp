@@ -55,8 +55,8 @@ bool Deck::hasStraightFlush(Deck deck)
     // Cards are sorted first by suit, then by value
     qSort(deck.begin(), deck.end(), suitValueCompare);
     Card::Suit curSuit = deck.first().suit();
-    int count = 0;
-    Card::Value lastValue = (Card::Value)-1;
+    int count = 1;
+    Card::Value lastValue = deck.first().value();
 
     foreach(const Card &card, deck) {
         if (curSuit == card.suit() && card.value() == (lastValue + 1)) {
@@ -65,7 +65,7 @@ bool Deck::hasStraightFlush(Deck deck)
                 return true;
         } else {
             curSuit = card.suit();
-            count = 0;
+            count = 1;
         }
         lastValue = card.value();
     }
@@ -100,21 +100,22 @@ bool Deck::hasFullHouse(Deck deck)
 
     foreach(const Card &card, deck)
         counts[card.value()]++;
-    int threes, twos;
+    bool threes = false, twos = false;
 
-    threes = twos = 0;
 
     for (int i=0; i<13; i++) {
         if (counts[i] >= 3) {
-            if (threes || twos)
+            if (threes || twos) {
                 return true;
-            else
-                threes++;
+            } else {
+                threes = true;
+            }
+        } else if (counts[i] >= 2) {
+            twos = true;
         }
-        else if (counts[i] >= 2) twos++;
     }
 
-    return false;
+    return (threes && twos);
 
 }
 
@@ -142,10 +143,10 @@ bool Deck::hasFlush(Deck deck)
 bool Deck::hasStraight(Deck deck)
 {
     // Sort by value only
-    qSort(deck.begin(), deck.end(), suitValueCompare);
+    qSort(deck.begin(), deck.end(), valueCompare);
 
     Card::Value lastValue = deck.first().value();
-    int count = 0;
+    int count = 1;
 
     foreach(const Card &card, deck) {
         if (card.value() == (lastValue + 1)) {
@@ -163,7 +164,7 @@ bool Deck::hasThreeOfAKind(Deck deck)
 {
     qSort(deck.begin(), deck.end(), valueCompare);
     Card::Value value = deck.first().value();
-    int count = 1;
+    int count = 0;
 
     foreach(const Card &card, deck) {
         if (card.value() == value) {
@@ -258,9 +259,13 @@ Deck Deck::take(int num)
 // Checks if this deck looses against another one
 bool Deck::operator <(Deck other)
 {
+    int s = strength(), o = other.strength();
+    if (s!=o)
+        return s < o;
+
     Deck deck(*this); // Copy that floppy
 
-    if (hasStraightFlush(deck) || hasFlush(deck)) {
+    if (hasStraightFlush(deck) || hasFlush(deck)) {        
         qSort(deck.begin(), deck.end(), suitValueCompare);
         qSort(other.begin(), other.end(), suitValueCompare);
         return compareDecks(deck, other);
@@ -308,7 +313,7 @@ Card::Value Deck::getMostValue(const Deck &deck)
     }
 
     int max = -1;
-    Card::Value value;
+    Card::Value value = (Card::Value)-1;
     for (int i=0; i<Card::Ace; i++) {
         if (valueCounts[(Card::Value)i] > max) {
             max = valueCounts[(Card::Value)i];
@@ -329,8 +334,8 @@ Card::Value Deck::getSecondMostValue(const Deck &deck)
     }
 
     int max = -1;
-    Card::Value mostValue;
-    Card::Value secondMost;
+    Card::Value mostValue = (Card::Value)-1;
+    Card::Value secondMost = (Card::Value)-1;
     for (int i=0; i<Card::Ace; i++) {
         if (valueCounts[(Card::Value)i] > max) {
             max = valueCounts[(Card::Value)i];

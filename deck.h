@@ -21,15 +21,17 @@ public:
 
     bool operator <(Deck other);
 
+    static bool hasStraightFlush(Deck deck);
+    static bool hasFourOfAKind(Deck deck);
+    static bool hasFullHouse(Deck deck);
+    static bool hasFlush(Deck deck);
+    static bool hasStraight(Deck deck);
+    static bool hasThreeOfAKind(Deck deck);
+    static bool hasTwoPair(Deck deck);
+    static bool hasPair(Deck deck);
+
+
 private:
-   static bool hasStraightFlush(Deck deck);
-   static bool hasFourOfAKind(Deck deck);
-   static bool hasFullHouse(Deck deck);
-   static bool hasFlush(Deck deck);
-   static bool hasStraight(Deck deck);
-   static bool hasThreeOfAKind(Deck deck);
-   static bool hasTwoPair(Deck deck);
-   static bool hasPair(Deck deck);
 
    static Card::Value getMostValue(const Deck &deck);
    static Card::Value getSecondMostValue(const Deck &deck);

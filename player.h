@@ -15,7 +15,7 @@ public:
 
     Player();
 
-    Action assess(Table *table);
+    virtual Action assess(Table *table);
     int handStrength(Table *table);
 
     void setDeck(Deck deck);
@@ -30,12 +30,13 @@ public:
 
     int lastHandStrength() { return m_lastHandStrength; }
 
-private:
+protected:
     Deck m_cards;
     bool m_hasFolded;
     int m_money;
     int m_bet;
 
+private:
     int m_lastHandStrength;
 };
 

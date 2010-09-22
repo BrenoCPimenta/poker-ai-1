@@ -13,9 +13,12 @@ SOURCES += main.cpp \
     table.cpp \
     card.cpp \
     deck.cpp \
-    preflop.cpp
+    preflop.cpp \
+    test.cpp \
+    preflopplayer.cpp
 HEADERS += player.h \
     table.h \
     card.h \
     deck.h \
-    preflop.h
+    preflop.h \
+    preflopplayer.h

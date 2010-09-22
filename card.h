@@ -35,6 +35,8 @@ public:
     Suit suit() const { return m_suit; }
     Value value() const { return m_value; }
 
+    void set(Value value, Suit suit) { m_value = value; m_suit = suit; }
+
     bool operator <(const Card &other) const;
 
     bool isNull() { return (m_value == -1 && m_suit == -1); }
