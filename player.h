@@ -31,7 +31,7 @@ public:
 
     int lastHandStrength() { return m_lastHandStrength; }
 
-    const QString name() { return m_name; }
+    const QString name() const { return m_name; }
 
 
     void win() { m_win++; }
@@ -41,7 +41,7 @@ public:
     int ties() { return m_tie; }
 
     int bets;
-    const Deck &deck() { return m_cards; }
+    const Deck &deck() const { return m_cards; }
 
 protected:
     Deck m_cards;

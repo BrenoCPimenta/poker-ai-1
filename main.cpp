@@ -1,3 +1,5 @@
+// 10:30, 361 ITV
+
 #include <QtCore/QCoreApplication>
 #include <QDebug>
 #include <QTime>
@@ -5,6 +7,7 @@
 
 #include "table.h"
 #include "preflop.h"
+#include "preflopplayer.h"
 
 #include "deck.h"
 
@@ -12,7 +15,6 @@
 
 int main(int argc, char *argv[])
 {
-    testDeck();
     QCoreApplication a(argc, argv);
     qsrand(QTime::currentTime().msec());
 
@@ -34,12 +36,35 @@ int main(int argc, char *argv[])
                 preflop.saveData(filename);
         } else if (a.arguments()[1] == "-t") {
             testDeck();
+        } else if (a.arguments()[1] == "-h") {
+            RolloutPlayer player;
+            Deck deck;
+            deck.generate();
+            deck.shuffle();
+            Deck straightFlush;
+            straightFlush << Card(Card::Two, Card::Spade)
+                    << Card(Card::Three, Card::Spade);
+            qDebug() << "Cards on hand:";
+            straightFlush.printOut();
+
+            Deck community;
+            community << Card(Card::Four, Card::Spade)
+                    << Card(Card::Five, Card::Spade)
+                    << Card(Card::Six, Card::Spade);
+            qDebug() << "\nCommunity cards:";
+            community.printOut();
+
+            deck.removeCards(straightFlush);
+
+            qDebug() << "Strength:" << player.h(straightFlush, community, 5);
+        } else {
+            qWarning() << "usage: " << a.arguments()[0] << " [-t|-g|-h]\n"
+                    << "\t-t\tTest card deck\n"
+                    << "\t-g\tGenerate preflop data (1000 rounds)\n"
+                    << "\t-h\tTest hand strength algorithm\n";
         }
+    } else {
+        Table table(Table::II);
+        table.play(1000);
     }
-
-    Table table;
-
-    table.play(1000);
-//    return a.exec();
 }
-

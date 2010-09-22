@@ -6,29 +6,49 @@
 
 #include <QDebug>
 
-Table::Table(QObject *parent) :
-        QObject(parent),
+Table::Table(Phase phase) :
         m_pot(0),
-        m_lastBet(0)
+        m_lastBet(0),
+        m_phase(phase)
 {
-    m_players << Player(true)
-              << Player(false)
-              << Player(false)
-              << RolloutPlayer();
+    switch (phase) {
+    case (II):
+        m_players << RolloutPlayer(false)
+                  << RolloutPlayer(false)
+                  << RolloutPlayer(true)
+                  << RolloutPlayer(true);
+    case (I):
+        m_players << Player(true)
+                  << Player(false)
+                  << Player(true)
+                  << Player(false);
+    }
 }
 
 void Table::play(int rounds)
 {
+    if (m_phase == I) {
+        qDebug() << "###########";
+        qDebug() << "# Phase 1 #";
+        qDebug() << "###########";
+    } else if (m_phase == II) {
+        qDebug() << "###########";
+        qDebug() << "# Phase 2 #";
+        qDebug() << "###########";
+    }
+
     for (int round=0; round<rounds; round++) {
         playHand();
     }
 
+    qDebug() << "-------------------";
     qDebug() << "Finished playing...";
     for (int i=0; i<m_players.size(); i++) {
         qWarning() << m_players[i].name() << "won"
                 << m_players[i].wins()
                 << "times and tied"
-                << m_players[i].ties() << "times.";
+                << m_players[i].ties() << "times. It has"
+                << m_players[i].money() << "casharoos.";
     }
 }
 
@@ -96,34 +116,55 @@ void Table::playHand()
         }
     }
 
-
-    int strongestHand = -1;
-
-    QList<int> winners;
+/*    QList<int> winners;
     for (int i=0; i<m_players.size(); i++)
         winners << i;
     for (int i=0; i<m_players.size(); i++)
         if (m_players[i].hasFolded())
-            winners.removeAll(i);
+            winners.removeAll(i);*/
 
-    Deck d, o;
+    Deck winner, hand;
+    QList<int> winners;
     // Stupid, late, slow, not thinking
     for (int i=0; i<m_players.size(); i++) {
-        for (int j=0; j<m_players.size(); j++) {
-            if (j==i) continue;
-            d = m_players[i].deck();
-            d << m_flop
-                 << m_river
-                 << m_turn;
-            o = m_players[j].deck();
-            o << m_flop
-                  << m_river
-                  << m_turn;
-            if (d < o)
-                winners.removeAll(i);
+        if (m_players[i].hasFolded()) continue;
+
+        hand = m_players[i].deck();
+        hand << m_flop
+             << m_river
+             << m_turn;
+        if (winner.isEmpty()) {
+            winner = hand;
+            winners << i;
+            continue;
+        }
+
+        if (winner < hand) {
+            winners.clear();
+            winners << i;
+            winner = hand;
+        } else if (!(hand < winner)) {
+            winners << i;
         }
     }
+
+    qDebug() << "----------------------------------\nHand over.";
     qDebug() << "We have" << winners.size() << "winners.";
+
+    foreach(const Player &player, m_players) {
+        if (player.hasFolded())
+            qDebug() << player.name() << "has folded.";
+        else {
+            qDebug() << player.name() << "has is in showdown:";
+            player.deck().printOut();
+            qDebug() << "---";
+        }
+    }
+    qDebug() << "Flop:";
+    m_flop.printOut();
+    qDebug() << "Turn:" << m_turn.toString();
+    qDebug() << "River:" << m_river.toString();
+
     if (winners.size() > 1) {
         int potPayout = m_pot / winners.size();
         foreach(int i, winners) {
@@ -178,7 +219,7 @@ void Table::doBettingRound()
                 m_players[current].takeMoney(m_players[current].bet());
             }
         }
-        qDebug() << "Active players:" << activePlayers();
+        //qDebug() << "Active players:" << activePlayers();
         if (activePlayers() < 2)
             return;
     } while (called < players); // make sure all people have called (or folded) since last raise

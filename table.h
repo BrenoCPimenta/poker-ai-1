@@ -1,7 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include <QObject>
 #include "card.h"
 #include "deck.h"
 #include "player.h"
@@ -10,11 +9,16 @@ class Player;
 class Deck;
 class Card;
 
-class Table : public QObject
+class Table
 {
-    Q_OBJECT
 public:
-    Table(QObject *parent = 0);
+    enum Phase {
+        I,
+        II,
+        III
+    };
+
+    Table(Phase phase);
 
     Deck flop() { return m_flop; }
     Card turn() { return m_turn; }
@@ -40,6 +44,7 @@ private:
 
     int m_pot;
     int m_lastBet;
+    Phase m_phase;
 };
 
 #endif // TABLE_H

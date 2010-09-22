@@ -286,7 +286,6 @@ bool Deck::operator <(Deck other)
 
         deck = getPairs(deck);
         other = getPairs(other);
-        qDebug() << deck.size() << ":" << other.size();
 
         return compareDecks(deck, other);
     } else {

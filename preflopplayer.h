@@ -10,9 +10,10 @@ public:
     RolloutPlayer(bool offensive = false);
 
     virtual Player::Action assess(Table *table);
+    int h(Deck hand, const Deck &onTable, int players);
 
 private:
-    int h(Deck hand, const Deck &onTable, int players);
+
 
     PreFlop m_preflop;
 };

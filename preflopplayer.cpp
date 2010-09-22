@@ -2,6 +2,8 @@
 #include "table.h"
 #include <math.h>
 
+#include <QDebug>
+
 RolloutPlayer::RolloutPlayer(bool offensive) : Player(offensive)
 {
     static int count = 0;
@@ -23,10 +25,19 @@ Player::Action RolloutPlayer::assess(Table *table)
         return Player::assess(table);
     }
 
-    int ps;
 
     if (table->flop().isEmpty()) {
-        ps = m_preflop.getProbability(m_cards.first(), m_cards.last(), table->numPlayers()) > 400;
+        int ps = m_preflop.getProbability(m_cards.first(), m_cards.last(), table->numPlayers()) > 400;
+        if (ps > 600 || (ps > 500 && m_offensive)) {
+            m_bet = table->lastBet() + 50;
+            return Player::Raise;
+        } else if (ps >= 400 || (ps > 300 && m_offensive)) {
+            return Player::Call;
+        } else {
+            m_hasFolded = true;
+            return Player::Fold;
+        }
+
     } else {
         Deck communityCards;
         communityCards << table->flop();
@@ -34,38 +45,42 @@ Player::Action RolloutPlayer::assess(Table *table)
             communityCards << table->river();
         if (!table->turn().isNull())
             communityCards << table->turn();
-        ps = h(m_cards, communityCards, table->activePlayers());
+
+        int ps = h(m_cards, communityCards, table->activePlayers());
+        int potOdds = table->lastBet()*1000 / (table->lastBet() + table->pot());
+        if (potOdds > ps) {
+            if (1.5*ps > potOdds || m_offensive) {
+                m_bet = table->lastBet() + 50;
+                return Player::Raise;
+            } else if (ps > 500)
+                return Player::Call;
+            else {
+                m_hasFolded = true;
+                return Player::Fold;
+            }
+        }
     }
 
-    if (ps > 600 || (ps > 500 && m_offensive)) {
-        m_bet = table->lastBet() + 50;
-        return Player::Raise;
-    } else if (ps >= 500 || (ps > 400 && m_offensive)) {
-        return Player::Call;
-    } else {
-        m_hasFolded = true;
-        return Player::Fold;
-    }
 }
 
 // THEY SEE ME ROLLIN', THEY HATIN'
 int RolloutPlayer::h(Deck hand, const Deck &onTable, int players)
 {
     hand.append(onTable);
+
     Deck deck;
     deck.generate();
     deck.removeCards(hand);
-    deck.removeCards(onTable);
-    deck.shuffle();
+//    deck.removeCards(onTable);
 
     Deck opponent;
-    int wins = 0, ties = 0;
-    int count = 0;
+    float wins = 0, ties = 0, count = 0;
     for (int x=0; x<deck.size(); x++) {
-        for (int y=x; y<deck.size(); y++) {
+        for (int y=x+1; y<deck.size(); y++) {
             count++;
-            opponent << deck.takeAt(x)
-                     << deck.takeAt(y);
+            opponent.clear();
+            opponent << deck.at(x)
+                     << deck.at(y);
             opponent.append(onTable);
             if (opponent < hand) {
                 wins++;
@@ -75,13 +90,15 @@ int RolloutPlayer::h(Deck hand, const Deck &onTable, int players)
         }
     }
 
-    ties *= 1000;
-    wins *= 1000;
+    /*ties *= 1000.0f;
+    wins *= 1000.0f;*/
 
-    wins += ties/2;
+    /*qDebug() << "wins:" << wins;
+    qDebug() << "ties:" << ties;
+    qDebug() << "count:" << count;*/
+
+    wins += ties/2.0f;
     wins /= count;
-
     wins = pow(wins, players);
-
-    return wins;
+    return (int)(wins*1000);
 }

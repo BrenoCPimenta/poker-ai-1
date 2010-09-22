@@ -37,7 +37,7 @@ Player::Action Player::assess(Table *table)
             return Call;
         }
 
-        if (handStrength(table) < 4) {
+        if (handStrength(table) < 5) {
             m_hasFolded = true;
             return Fold;
         } else if (lastHandStrength() > 6 && lastHandStrength() < 7)
@@ -47,11 +47,6 @@ Player::Action Player::assess(Table *table)
             return Raise;
         }
     } else {
-        if (table->lastBet() < 150) {
-            m_bet = 50;
-            return Raise;
-        }
-
         if (table->flop().isEmpty()) {
             return Call;
         }

@@ -16,11 +16,13 @@ SOURCES += main.cpp \
     preflop.cpp \
     test.cpp \
     preflopplayer.cpp \
-    statisticalmodel.cpp
+    statisticalmodel.cpp \
+    context.cpp
 HEADERS += player.h \
     table.h \
     card.h \
     deck.h \
     preflop.h \
     preflopplayer.h \
-    statisticalmodel.h
+    statisticalmodel.h \
+    context.h
