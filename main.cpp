@@ -41,22 +41,48 @@ int main(int argc, char *argv[])
             Deck deck;
             deck.generate();
             deck.shuffle();
-            Deck straightFlush;
-            straightFlush << Card(Card::Two, Card::Spade)
-                    << Card(Card::Three, Card::Spade);
-            qDebug() << "Cards on hand:";
-            straightFlush.printOut();
+            Deck hand;
+/*            hand << Card(Card::Two, Card::Spade)
+                    << Card(Card::Three, Card::Spade);*/
+
+            hand.clear();
+            hand << Card(Card::Ace, Card::Club)
+                    << Card(Card::Ace, Card::Diamond);
+
+
 
             Deck community;
             community << Card(Card::Four, Card::Spade)
                     << Card(Card::Five, Card::Spade)
                     << Card(Card::Six, Card::Spade);
+
+            //hand.clear();
+            //hand = deck.take(2);
+            community.clear();
+            community = deck.take(3);
+            qDebug() << "Cards on hand:";
+            hand.printOut();
             qDebug() << "\nCommunity cards:";
             community.printOut();
+            qDebug() << "Strength:" << player.h(hand, community, 5);
+            community.append(deck.take(1));
+            qDebug() << "\nCommunity cards:";
+            community.printOut();
+            qDebug() << "Strength:" << player.h(hand, community, 5);
+        } else if (a.arguments()[1] == "-p") {
+            PreFlop data;
+            data.loadData();
+            Deck deck;
+            deck.generate();
+            deck.shuffle();
+            Deck hand;
+            hand = deck.take(2);
+            hand.clear();
+            hand << Card(Card::Ace, Card::Club)
+                    << Card(Card::Ace, Card::Diamond);
+            hand.printOut();
+            qDebug() << "Preflop strength:" << data.getProbability(hand.first(), hand.last(), 5);
 
-            deck.removeCards(straightFlush);
-
-            qDebug() << "Strength:" << player.h(straightFlush, community, 5);
         } else {
             qWarning() << "usage: " << a.arguments()[0] << " [-t|-g|-h]\n"
                     << "\t-t\tTest card deck\n"
@@ -65,6 +91,6 @@ int main(int argc, char *argv[])
         }
     } else {
         Table table(Table::II);
-        table.play(1000);
+        table.play(30000);
     }
 }

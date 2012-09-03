@@ -6,7 +6,7 @@ QT -= gui
 TARGET = holdme
 CONFIG += console
 CONFIG -= app_bundle
-CONFIG += debug
+CONFIG += release
 TEMPLATE = app
 SOURCES += main.cpp \
     player.cpp \

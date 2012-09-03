@@ -73,7 +73,7 @@ int RolloutPlayer::h(Deck hand, const Deck &onTable, int players)
 //    deck.removeCards(onTable);
 
     Deck opponent;
-    float wins = 0, ties = 0, count = 0;
+    double wins = 0, ties = 0, count = 0;
     for (int x=0; x<deck.size(); x++) {
         for (int y=x+1; y<deck.size(); y++) {
             count++;
@@ -92,11 +92,11 @@ int RolloutPlayer::h(Deck hand, const Deck &onTable, int players)
     /*ties *= 1000.0f;
     wins *= 1000.0f;*/
 
-    /*qDebug() << "wins:" << wins;
+    qDebug() << "wins:" << wins;
     qDebug() << "ties:" << ties;
-    qDebug() << "count:" << count;*/
+    qDebug() << "count:" << count;
 
-    wins += ties/2.0f;
+    wins += ties/2.0d;
     wins /= count;
     wins = pow(wins, players);
     return (int)(wins*1000);
